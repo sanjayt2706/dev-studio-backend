@@ -9,9 +9,16 @@ connectDB();
 const app = express();
 
 // Configurable CORS supporting Netlify production domain and local dev
-const allowedOrigins = process.env.CLIENT_URL
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:4173',
+  'https://devstudioclub.netlify.app',
+];
+const envOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(',').map((u) => u.trim().replace(/\/+$/, ''))
-  : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:4173'];
+  : [];
+const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
 
 app.use(
   cors({
